@@ -40,7 +40,9 @@ int main()
 	buffer.create(window_size, window_size, sf::Color::Black);
 	buffer.createMaskFromColor(sf::Color::Black);
 	sf::Texture bufferTexture;
+	bufferTexture.loadFromImage(buffer);
 	sf::Sprite bufferSprite;
+	bufferSprite.setTexture(bufferTexture);
 
 	std::cout.precision(digits);
 
@@ -89,8 +91,7 @@ int main()
 			std::cout << "Pi: " << 4.f*in_points / sum << std::endl;
 			result_printed = true;
 		}
-		bufferTexture.loadFromImage(buffer);
-		bufferSprite.setTexture(bufferTexture);
+		bufferTexture.update(buffer);
 		app.clear();
 		app.draw(ring);
 		app.draw(bufferSprite);
