@@ -81,6 +81,11 @@ int main()
 			}
 			--number_of_points;
 			buffer.setPixel(screen_x, screen_y, color);
+			bufferTexture.update(buffer);
+			app.clear();
+			app.draw(ring);
+			app.draw(bufferSprite);
+			app.display();
 		}
 		else if (number_of_points == 0 && result_printed == false)
 		{
@@ -91,11 +96,6 @@ int main()
 			std::cout << "Pi: " << 4.f*in_points / sum << std::endl;
 			result_printed = true;
 		}
-		bufferTexture.update(buffer);
-		app.clear();
-		app.draw(ring);
-		app.draw(bufferSprite);
-		app.display();
 	}
 
 	return 0;
