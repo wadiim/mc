@@ -3,20 +3,28 @@
 
 #include <iostream>
 
+#ifdef _WIN32
+# include <windows.h>
+#elif defined(__unix__)
+# include <unistd.h>
+#endif
+
 #define DEFAULT_WINDOWS_SIZE 800
 #define DEFAULT_PRECISION 8
 #define DEFAULT_NUM_OF_POINTS 1024
 
 unsigned int get_numeric_input(unsigned int default_value);
+bool is_interactive();
 
 int main()
 {
 	unsigned int window_size = DEFAULT_WINDOWS_SIZE;
+	bool interactive = is_interactive();
 
-	std::cout << "Precision: ";
+	if (interactive) std::cout << "Precision: ";
 	unsigned int digits = get_numeric_input(DEFAULT_PRECISION);
 
-	std::cout << "Number of points: ";
+	if (interactive) std::cout << "Number of points: ";
 	unsigned int number_of_points
 		= get_numeric_input(DEFAULT_NUM_OF_POINTS);
 
@@ -89,7 +97,8 @@ int main()
 		}
 		else if (number_of_points == 0 && result_printed == false)
 		{
-			std::cout << "----------------------" << std::endl;
+			if (interactive) std::cout
+				<< "----------------------" << std::endl;
 			std::cout << "In: " << in_points << std::endl;
 			std::cout << "Out: " << out_points << std::endl;
 			mpfr::mpreal sum = in_points + out_points;
@@ -112,4 +121,17 @@ unsigned int get_numeric_input(unsigned int default_value)
 		return default_value;
 	}
 	return temp;
+}
+
+bool is_interactive()
+{
+#ifdef _WIN32
+	HANDLE hIn = GetStdHandle(STD_INPUT_HANDLE);
+	DWORD type = GetFileType(hIn);
+	return (type == FILE_TYPE_CHAR) ? true : false;
+#elif defined(__unix__)
+	return (isatty(fileno(stdin))) ? true : false;
+#else
+	return true;
+#endif
 }
